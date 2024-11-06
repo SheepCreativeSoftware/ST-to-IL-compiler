@@ -1,0 +1,65 @@
+name: CI
+
+on:
+    push:
+        branches: ['main']
+        tags: ['**']
+    pull_request:
+        # Build all pull requests, regardless of what their base branch is.
+        branches: ['**']
+        types:
+            # Default types (see https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request)
+            - opened
+            - synchronize
+            - reopened
+            # Extra types (re-run CI when marking PR for "ready for review")
+            - ready_for_review
+
+env:
+    node_version: 21
+
+# Automatically cancel previous runs for the same ref (i.e. branch)
+concurrency:
+    group: ${{ github.ref }}-${{ github.event_name }}
+    cancel-in-progress: true
+
+jobs:
+    lint:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out the code
+              uses: actions/checkout@v4
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '21'
+                  token: ${{ secrets.GH_DOTCOM_TOKEN }}
+                  cache: 'yarn'
+                  cache-dependency-path: 'yarn.lock'
+                  registry-url: 'https://registry.npmjs.com'
+            - name: Install dependencies
+              run: yarn install --frozen-lockfile --network-concurrency 1 --child-concurrency 1
+            - name: Lint code (ESLint)
+              run: yarn lint:eslint
+            - name: Lint code (Prettier)
+              run: yarn lint:prettier
+            - name: Lint code (TypeScript)
+              run: yarn lint:tsc
+
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out the code
+              uses: actions/checkout@v4
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '21'
+                  token: ${{ secrets.GH_DOTCOM_TOKEN }}
+                  cache: 'yarn'
+                  cache-dependency-path: 'yarn.lock'
+                  registry-url: 'https://registry.npmjs.com'
+            - name: Install dependencies
+              run: yarn install --frozen-lockfile --network-concurrency 1 --child-concurrency 1
+            - name: Run Unit Tests
+              run: yarn test

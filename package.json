@@ -1,0 +1,50 @@
+{
+	"name": "st-to-il-compiler",
+	"version": "0.0.1",
+	"description": "Compiler that compiles ST source code to proprietary IL",
+	"main": "dist/app.js",
+	"repository": "https://github.com/SheepCreativeSoftware/ST-to-IL-compiler.git",
+	"author": "Marina Egner",
+	"license": "MIT",
+	"private": true,
+	"scripts": {
+		"clean": "rm -rf dist/",
+		"prebuild": "yarn run clean",
+		"build": "./node_modules/.bin/esbuild src/app.ts --bundle --platform=node  --outfile=dist/app.js",
+		"lint": "yarn lint:eslint && yarn lint:prettier && yarn lint:tsc",
+		"lint:eslint": "eslint --cache --cache-strategy content",
+		"lint:eslint:fix": "yarn lint:eslint --fix",
+		"lint:prettier": "yarn prettier --check \"**/*.{xml,json,yml,yaml,css}\"",
+		"lint:prettier:fix": "yarn prettier --write \"**/*.{xml,json,yml,yaml,css}\"",
+		"lint:tsc": "yarn tsc --project tsconfig.node.json --noEmit",
+		"test": "tsx --test 'src/**/*.test.ts'",
+		"test:watch": "tsx --test --watch \"**/*.test.ts\"",
+		"test:coverage": "tsx --test --experimental-test-coverage \"**/*.test.ts\"",
+		"start": "node dist/app.js",
+		"dev": "tsx src/app.ts",
+		"prepare": "husky"
+	},
+	"dependencies": {
+		"buntstift": "^5.0.2",
+		"command-line-args": "^6.0.1",
+		"command-line-usage": "^7.0.3",
+		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"@eslint-community/eslint-plugin-eslint-comments": "^4.4.1",
+		"@eslint/js": "^9.14.0",
+		"@stylistic/eslint-plugin": "^2.10.1",
+		"@types/command-line-args": "^5.2.3",
+		"@types/command-line-usage": "^5.0.4",
+		"@types/eslint__js": "^8.42.3",
+		"@types/node": "^22.9.0",
+		"esbuild": "^0.24.0",
+		"eslint": "^9.14.0",
+		"husky": "^9.1.6",
+		"prettier": "^3.3.3",
+		"tsx": "^4.19.2",
+		"typescript": "^5.6.3",
+		"typescript-eslint": "^8.13.0",
+		"yarn": "^1.22.22"
+	}
+}
