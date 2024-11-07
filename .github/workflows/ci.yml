@@ -16,7 +16,7 @@ on:
             - ready_for_review
 
 env:
-    node_version: 21
+    node_version: 22
 
 # Automatically cancel previous runs for the same ref (i.e. branch)
 concurrency:

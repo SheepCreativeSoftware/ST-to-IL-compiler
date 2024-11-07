@@ -1,4 +1,4 @@
-# ST-to-IL-compiler
+# ST-to-IL-compiler [WIP]
 Compiler that compiles ST source code to proprietary IL
 ====================
 
