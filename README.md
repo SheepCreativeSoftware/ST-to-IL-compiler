@@ -1,6 +1,5 @@
 # ST-to-IL-compiler [WIP]
-Compiler that compiles ST source code to proprietary IL
-====================
+Compiler that compiles ST source code to proprietary IL  
 
 ![CI](https://github.com/SheepCreativeSoftware/st-to-il-compiler/actions/workflows/ci.yml/badge.svg)
 [![NPM Version](https://img.shields.io/npm/v/@sheepcs/st-to-il-compiler.svg)](https://www.npmjs.com/package/@sheepcs/st-to-il-compiler)
