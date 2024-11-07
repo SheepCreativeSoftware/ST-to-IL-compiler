@@ -7,6 +7,9 @@
 	"author": "Marina Egner",
 	"license": "MIT",
 	"private": true,
+	"bin": {
+		"st-to-il-compiler": "bin/st-to-il-compiler.js"
+	},
 	"type": "module",
 	"engines": {
 		"node": ">=22.8.0"
@@ -14,7 +17,7 @@
 	"scripts": {
 		"clean": "rm -rf dist/",
 		"prebuild": "yarn run clean",
-		"build": "./node_modules/.bin/esbuild src/app.ts --bundle --platform=node  --outfile=dist/app.js",
+		"build": "yarn tsc --project tsconfig.node.json",
 		"lint": "yarn lint:eslint && yarn lint:prettier && yarn lint:tsc",
 		"lint:eslint": "eslint --cache --cache-strategy content",
 		"lint:eslint:fix": "yarn lint:eslint --fix",
@@ -24,8 +27,6 @@
 		"test": "tsx --test 'src/**/*.test.ts'",
 		"test:watch": "tsx --test --watch \"**/*.test.ts\"",
 		"test:coverage": "tsx --test --experimental-test-coverage \"**/*.test.ts\"",
-		"start": "node dist/app.js",
-		"dev": "tsx src/app.ts",
 		"prepare": "husky"
 	},
 	"dependencies": {

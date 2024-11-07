@@ -6,13 +6,6 @@
 		"lib": ["ES2022", "DOM", "DOM.Iterable"],
 		"skipLibCheck": true,
 
-		/* Bundler mode */
-		"moduleResolution": "Bundler",
-		"allowImportingTsExtensions": true,
-		"isolatedModules": true,
-		"noEmit": true,
-		"jsx": "preserve",
-
 		/* Linting */
 		"strict": true,
 		"noUnusedLocals": true,
@@ -22,6 +15,5 @@
 		"types": ["node"]
 	},
 
-	"include": ["src/**/*.ts", "src/**/*.mts", "src/**/*.tsx"],
-	"references": [{ "path": "./tsconfig.node.json" }]
+	"include": ["src/**/*.ts", "src/**/*.mts", "src/**/*.tsx"]
 }

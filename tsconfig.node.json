@@ -1,10 +1,13 @@
 {
 	"compilerOptions": {
-		"composite": true,
+		"composite": false,
 		"skipLibCheck": true,
 		"module": "NodeNext",
 		"moduleResolution": "NodeNext",
-		"allowSyntheticDefaultImports": true
+		"allowSyntheticDefaultImports": true,
+		"noEmit": false,
+		"outDir": "dist",
+		"rootDir": "src"
 	},
 	"extends": "./tsconfig.base.json"
 }
