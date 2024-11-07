@@ -38,7 +38,7 @@ const cli = async () => {
 	}
 
 	buntstift.error(`Command unknown or missing: ${JSON.stringify(mainOptions)}`);
-	return buntstift.info('Use "n4-simple-build --help" for usage information');
+	return buntstift.info('Use "st-to-il-compiler --help" for usage information');
 };
 
 cli();
