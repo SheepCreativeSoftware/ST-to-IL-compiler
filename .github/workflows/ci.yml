@@ -32,7 +32,7 @@ jobs:
             - name: Setup Node
               uses: actions/setup-node@v4
               with:
-                  node-version: '21'
+                  node-version: ${{ env.node_version }}
                   token: ${{ secrets.GH_DOTCOM_TOKEN }}
                   cache: 'yarn'
                   cache-dependency-path: 'yarn.lock'
@@ -54,7 +54,7 @@ jobs:
             - name: Setup Node
               uses: actions/setup-node@v4
               with:
-                  node-version: '21'
+                  node-version: ${{ env.node_version }}
                   token: ${{ secrets.GH_DOTCOM_TOKEN }}
                   cache: 'yarn'
                   cache-dependency-path: 'yarn.lock'
