@@ -27,6 +27,7 @@
 		"test": "tsx --test 'src/**/*.test.ts'",
 		"test:watch": "tsx --test --watch \"**/*.test.ts\"",
 		"test:coverage": "tsx --test --experimental-test-coverage \"**/*.test.ts\"",
+		"start": "yarn build && npx st-to-il-compiler verify -f test.st",
 		"prepare": "husky"
 	},
 	"dependencies": {
