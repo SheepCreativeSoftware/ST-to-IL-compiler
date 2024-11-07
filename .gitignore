@@ -131,3 +131,4 @@ dist
 
 # ST files
 *.st
+*.src

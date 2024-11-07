@@ -14,12 +14,6 @@ class VarBlock extends BaseElement implements CompilerInterface {
 	) {
 		super(line, column);
 	}
-	semanticCheck(): void {
-		throw new Error('Method not implemented.');
-	}
-	compile(): string {
-		throw new Error('Method not implemented.');
-	}
 
 	getVariables(): VariableDefinition[] {
 		return this.variables;
@@ -47,6 +41,13 @@ class VarBlock extends BaseElement implements CompilerInterface {
 			lastSearchIndex,
 			value: new VarBlock(line, column, variables),
 		};
+	}
+
+	semanticCheck(): void {
+		for (const variable of this.variables) variable.semanticCheck();
+	}
+	compile(): string {
+		return this.variables.map((variable) => variable.compile()).join('\n');
 	}
 }
 

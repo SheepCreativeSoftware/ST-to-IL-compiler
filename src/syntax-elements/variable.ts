@@ -2,18 +2,44 @@ import { BaseElement } from './base-element.js';
 import type { CompilerInterface } from '../compiler-interface.js';
 import type { Token } from '../lexical-analysis/lexical-analyser.js';
 
-const variableType = [
+const VARIABLE_TYPE = [
 	'BIT',
 	'BOOL',
-	'BYTE',
 	'DWORD',
 	'WORD',
 	'INT',
 	'DINT',
 	'REAL',
 ] as const;
+type VariableType = typeof VARIABLE_TYPE[number];
 
-type VariableType = typeof variableType[number];
+const TYPE_MAPPING: Record<VariableType, string> = {
+	BIT: 'F',
+	BOOL: 'F',
+	DINT: 'R',
+	DWORD: 'R FLOAT',
+	INT: 'R',
+	REAL: 'R FLOAT',
+	WORD: 'R FLOAT',
+};
+
+const VALUE_MAPPING: Record<string, string> = {
+	'FALSE': '0',
+	'TRUE': '1',
+};
+
+const VALID_BIT_VALUES = [0, 1];
+const VALID_BOOL_VALUES = [...VALID_BIT_VALUES, true, false];
+// Regex for DWORD values which is a 32-bit unsigned integer and can be in decimal or hexadecimal
+const VALID_DWORD_VALUES = /^(0x[0-9A-Fa-f]+|\d+)$/;
+// Regex for WORD values which is a 16-bit unsigned integer and can be in decimal or hexadecimal
+const VALID_WORD_VALUES = /^(0x[0-9A-Fa-f]+|\d+)$/;
+// Regex for INT values which is a 16-bit signed integer and can be in decimal
+const VALID_INT_VALUES = /^-?\d+$/;
+// Regex for DINT values which is a 32-bit signed integer and can be in decimal
+const VALID_DINT_VALUES = /^-?\d+$/;
+// Regex for REAL values which is a 32-bit floating point number that has a decimal point or an exponent or both
+const VALID_REAL_VALUES = /^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$/;
 
 class VariableDefinition extends BaseElement implements CompilerInterface {
 	private constructor(
@@ -25,11 +51,17 @@ class VariableDefinition extends BaseElement implements CompilerInterface {
 	) {
 		super(line, column);
 	}
-	semanticCheck(): void {
-		throw new Error('Method not implemented.');
+
+	getName(): string {
+		return this.name;
 	}
-	compile(): string {
-		throw new Error('Method not implemented.');
+
+	getType(): VariableType {
+		return this.type;
+	}
+
+	getValue(): string | number | boolean | null {
+		return this.value;
 	}
 
 	/* eslint-disable complexity, no-magic-numbers -- evaluation of the type is complex by nature */
@@ -46,7 +78,7 @@ class VariableDefinition extends BaseElement implements CompilerInterface {
 		const type = tokens[currentSearchIndex + 2];
 		/* @ts-expect-error -- This is to check if the type is the same as the variableType */
 		// eslint-disable-next-line curly -- Line gets too long
-		if (type.type !== 'keyword' && !variableType.includes(type.value)) {
+		if (type.type !== 'keyword' && !VARIABLE_TYPE.includes(type.value)) {
 			throw new SyntaxError(`VariableDefinition type is not a valid keyword:${type.line}:${type.column}`);
 		}
 
@@ -56,7 +88,7 @@ class VariableDefinition extends BaseElement implements CompilerInterface {
 			valueToken = tokens[currentSearchIndex + 4];
 			// eslint-disable-next-line curly -- Line gets too long
 			if (valueToken.type !== 'identifier' && valueToken.type !== 'number' && valueToken.type !== 'keyword') {
-				throw new SyntaxError(`VariableDefinition value is not valid:${valueToken.line}:${valueToken.column}`);
+				throw new SyntaxError(`Variable value "${valueToken.value}" is not valid:${valueToken.line}:${valueToken.column}`);
 			}
 
 			const lineEnd = tokens[currentSearchIndex + 5];
@@ -76,17 +108,68 @@ class VariableDefinition extends BaseElement implements CompilerInterface {
 		};
 	}
 	/* eslint-enable complexity, no-magic-numbers -- End */
+	// eslint-disable-next-line complexity -- It must check every possible type
+	semanticCheck(): void {
+		if (this.value === null) return;
 
-	getName(): string {
-		return this.name;
+		switch (this.type) {
+			case 'BIT':
+				/* eslint-disable curly -- Line gets too long */
+				if (!VALID_BIT_VALUES.includes(this.value as number)) {
+					throw new SyntaxError(`Variable value "${this.value}" is not valid for type ${this.type}:${this.getLine()}:${this.getColumn()}`);
+				}
+
+				break;
+			case 'BOOL':
+				if (!VALID_BOOL_VALUES.includes(this.value as number | boolean)) {
+					throw new SyntaxError(`Variable value "${this.value}" is not valid for type ${this.type}:${this.getLine()}:${this.getColumn()}`);
+				}
+
+				break;
+			case 'DWORD':
+				if (!VALID_DWORD_VALUES.exec(this.value as string)) {
+					throw new SyntaxError(`Variable value "${this.value}" is not valid for type ${this.type}:${this.getLine()}:${this.getColumn()}`);
+				}
+
+				break;
+			case 'WORD':
+				if (!VALID_WORD_VALUES.exec(this.value as string)) {
+					throw new SyntaxError(`Variable value "${this.value}" is not valid for type ${this.type}:${this.getLine()}:${this.getColumn()}`);
+				}
+
+				break;
+			case 'INT':
+				if (!VALID_INT_VALUES.exec(this.value as string)) {
+					throw new SyntaxError(`Variable value "${this.value}" is not valid for type ${this.type}:${this.getLine()}:${this.getColumn()}`);
+				}
+
+				break;
+			case 'DINT':
+				if (!VALID_DINT_VALUES.exec(this.value as string)) {
+					throw new SyntaxError(`Variable value "${this.value}" is not valid for type ${this.type}:${this.getLine()}:${this.getColumn()}`);
+				}
+
+				break;
+			case 'REAL':
+				if (!VALID_REAL_VALUES.exec(this.value as string)) {
+					throw new SyntaxError(`Variable value "${this.value}" is not valid for type ${this.type}:${this.getLine()}:${this.getColumn()}`);
+				}
+
+				break;
+			default:
+				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions -- This should never happen
+				throw new SyntaxError(`Unknown type ${this.type}:${this.getLine()}:${this.getColumn()}`);
+		}
+		/* eslint-enable curly -- End */
 	}
+	compile(): string {
+		if (this.value === null) return `${this.name} EQU ${TYPE_MAPPING[this.type]};`;
+		// eslint-disable-next-line curly -- Line gets too long
+		if (typeof this.value === 'string' && VALUE_MAPPING[this.value]) {
+			return `${this.name} EQU ${TYPE_MAPPING[this.type]} := ${VALUE_MAPPING[this.value]};`;
+		};
 
-	getType(): VariableType {
-		return this.type;
-	}
-
-	getValue(): string | number | boolean | null {
-		return this.value;
+		return `${this.name} EQU ${TYPE_MAPPING[this.type]} := ${this.value};`;
 	}
 }
 
