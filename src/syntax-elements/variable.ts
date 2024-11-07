@@ -28,8 +28,8 @@ const VALUE_MAPPING: Record<string, string> = {
 	'TRUE': '1',
 };
 
-const VALID_BIT_VALUES = [0, 1];
-const VALID_BOOL_VALUES = [...VALID_BIT_VALUES, true, false];
+const VALID_BIT_VALUES = ['0', '1'];
+const VALID_BOOL_VALUES = [...VALID_BIT_VALUES, 'TRUE', 'FALSE'];
 // Regex for DWORD values which is a 32-bit unsigned integer and can be in decimal or hexadecimal
 const VALID_DWORD_VALUES = /^(0x[0-9A-Fa-f]+|\d+)$/;
 // Regex for WORD values which is a 16-bit unsigned integer and can be in decimal or hexadecimal
@@ -115,13 +115,13 @@ class VariableDefinition extends BaseElement implements CompilerInterface {
 		switch (this.type) {
 			case 'BIT':
 				/* eslint-disable curly -- Line gets too long */
-				if (!VALID_BIT_VALUES.includes(this.value as number)) {
+				if (!VALID_BIT_VALUES.includes(this.value as string)) {
 					throw new SyntaxError(`Variable value "${this.value}" is not valid for type ${this.type}:${this.getLine()}:${this.getColumn()}`);
 				}
 
 				break;
 			case 'BOOL':
-				if (!VALID_BOOL_VALUES.includes(this.value as number | boolean)) {
+				if (!VALID_BOOL_VALUES.includes(this.value as string)) {
 					throw new SyntaxError(`Variable value "${this.value}" is not valid for type ${this.type}:${this.getLine()}:${this.getColumn()}`);
 				}
 
