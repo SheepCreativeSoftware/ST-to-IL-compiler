@@ -1,8 +1,8 @@
-import type { BaseElement } from '../syntax-elements/base-element.js';
+import type { CompilerInterface } from '../compiler-interface.js';
 import { KEYWORD_MAPPING } from './keyword-mapping.js';
 import type { Token } from '../lexical-analysis/lexical-analyser.js';
 
-type ParseTree = BaseElement[];
+type ParseTree = CompilerInterface[];
 
 const syntaxAnalyser = (tokens: Token[]): ParseTree => {
 	const parseTree: ParseTree = [];
@@ -12,7 +12,7 @@ const syntaxAnalyser = (tokens: Token[]): ParseTree => {
 
 		if (!elementFactory) throw new SyntaxError(`Unknown keyword "${token.type}" with value "${token.value}":${token.line}:${token.column}`);
 
-		const { lastSearchIndex, value } = elementFactory(tokens, index);
+		const { lastSearchIndex, value } = elementFactory.createFromTokens(tokens, index);
 		parseTree.push(value);
 		index = lastSearchIndex + 1;
 	}
@@ -21,3 +21,4 @@ const syntaxAnalyser = (tokens: Token[]): ParseTree => {
 };
 
 export { syntaxAnalyser };
+export type { ParseTree };

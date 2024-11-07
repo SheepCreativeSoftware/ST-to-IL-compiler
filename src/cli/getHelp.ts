@@ -16,6 +16,15 @@ const verifyOptions = [
 	},
 ] as commandLineUsage.OptionDefinition[];
 
+const compileOptions = [
+	{
+		alias: 'f',
+		description: 'file to be compiled',
+		name: 'file',
+		type: String,
+	},
+] as commandLineUsage.OptionDefinition[];
+
 /** Shows a usage guide for cli commands */
 const getHelp = () => {
 	const usage = commandLineUsage([
@@ -39,12 +48,19 @@ const getHelp = () => {
 			],
 		},
 		{
-			content: [{ name: 'verify', summary: 'Verifies that the source code is valid.' }],
+			content: [
+				{ name: 'verify', summary: 'Verifies that the source code is valid.' },
+				{ name: 'compile', summary: 'Compiles the source code to IL code.' },
+			],
 			header: 'Command List',
 		},
 		{
 			header: 'Verify Operation Options',
 			optionList: verifyOptions,
+		},
+		{
+			header: 'Compile Operation Options',
+			optionList: compileOptions,
 		},
 		{
 			content: [

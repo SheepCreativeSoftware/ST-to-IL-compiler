@@ -1,8 +1,9 @@
 import { BaseElement } from './base-element.js';
+import type { CompilerInterface } from '../compiler-interface.js';
 import type { Token } from '../lexical-analysis/lexical-analyser.js';
 import { VariableDefinition } from './variable.js';
 
-class VarBlock extends BaseElement {
+class VarBlock extends BaseElement implements CompilerInterface {
 	static startKeyword = 'VAR';
 	static endKeyword = 'END_VAR';
 
@@ -13,12 +14,18 @@ class VarBlock extends BaseElement {
 	) {
 		super(line, column);
 	}
+	semanticCheck(): void {
+		throw new Error('Method not implemented.');
+	}
+	compile(): string {
+		throw new Error('Method not implemented.');
+	}
 
 	getVariables(): VariableDefinition[] {
 		return this.variables;
 	}
 
-	static createFromTokens(tokens: Token[], currentSearchIndex: number): { lastSearchIndex: number, value: BaseElement } {
+	static createFromTokens(tokens: Token[], currentSearchIndex: number): { lastSearchIndex: number, value: CompilerInterface } {
 		const line = tokens[currentSearchIndex].line;
 		const column = tokens[currentSearchIndex].column;
 

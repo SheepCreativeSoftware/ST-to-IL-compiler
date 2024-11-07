@@ -1,4 +1,5 @@
 import { BaseElement } from './base-element.js';
+import type { CompilerInterface } from '../compiler-interface.js';
 import type { Token } from '../lexical-analysis/lexical-analyser.js';
 
 const variableType = [
@@ -14,7 +15,7 @@ const variableType = [
 
 type VariableType = typeof variableType[number];
 
-class VariableDefinition extends BaseElement {
+class VariableDefinition extends BaseElement implements CompilerInterface {
 	private constructor(
 		line: number,
 		column: number,
@@ -24,9 +25,15 @@ class VariableDefinition extends BaseElement {
 	) {
 		super(line, column);
 	}
+	semanticCheck(): void {
+		throw new Error('Method not implemented.');
+	}
+	compile(): string {
+		throw new Error('Method not implemented.');
+	}
 
 	/* eslint-disable complexity, no-magic-numbers -- evaluation of the type is complex by nature */
-	static createFromTokens(tokens: Token[], currentSearchIndex: number): { lastSearchIndex: number, value: BaseElement } {
+	static createFromTokens(tokens: Token[], currentSearchIndex: number): { lastSearchIndex: number, value: CompilerInterface } {
 		const name = tokens[currentSearchIndex];
 		if (name.type !== 'identifier') throw new SyntaxError(`VariableDefinition name is not an valid identifier:${name.line}:${name.column}`);
 
