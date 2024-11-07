@@ -119,15 +119,16 @@ describe('lexicalAnalyser', () => {
 			assert.deepStrictEqual(tokens[2], { column: 3, line: 1, type: 'number', value: '456.789' });
 		});
 		it('should identify numbers with exponent', () => {
-			const code = '123e4 456e-4 789E4 456e+4';
+			const code = '123e4 456e-4 789E4 456e+4 56.12e4';
 
 			const tokens = lexicalAnalyser(code);
 
-			assert.strictEqual(tokens.length, 4);
+			assert.strictEqual(tokens.length, 5);
 			assert.deepStrictEqual(tokens[0], { column: 1, line: 1, type: 'number', value: '123e4' });
 			assert.deepStrictEqual(tokens[1], { column: 2, line: 1, type: 'number', value: '456e-4' });
 			assert.deepStrictEqual(tokens[2], { column: 3, line: 1, type: 'number', value: '789E4' });
 			assert.deepStrictEqual(tokens[3], { column: 4, line: 1, type: 'number', value: '456e+4' });
+			assert.deepStrictEqual(tokens[4], { column: 5, line: 1, type: 'number', value: '56.12e4' });
 		});
 	});
 	describe('identifiers', () => {
