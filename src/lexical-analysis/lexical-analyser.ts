@@ -4,8 +4,8 @@ import { KEYWORDS } from './keywords-constants.js';
 interface Token {
 	type: 'keyword' | 'identifier' | 'operator' | 'delimiter' | 'number' | 'unknown';
 	value: string;
-	line?: number;
-	column?: number;
+	line: number;
+	column: number;
 }
 
 const LAST_WORD = -1;
