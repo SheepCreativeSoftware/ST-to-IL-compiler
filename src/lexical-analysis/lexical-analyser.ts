@@ -23,6 +23,8 @@ const checkForKnownWord = (word: string, line: number, column: number): Token | 
 	if (KEYWORDS.includes(word)) return { column, line, type: 'keyword', value: word };
 	// Is number or number which includes decimal point or number with exponent
 	if (/^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$/.exec(word)) return { column, line, type: 'number', value: word };
+	// Fin hexadecimal numbers that are prefixed with 16# and can include underscore
+	if (/^16#[0-9A-Fa-f_]+$/.exec(word)) return { column, line, type: 'number', value: word };
 	// Find characters from A-Z and numbers, but numbers can't be at the beginning
 	if (/^[a-zA-z][a-zA-z0-9]*$/.exec(word)) return { column, line, type: 'identifier', value: word };
 

@@ -19,12 +19,17 @@ class VariableDefinition extends BaseElement implements CompilerInterface {
 
 	/* eslint-disable complexity, no-magic-numbers -- evaluation of the type is complex by nature */
 	static createFromTokens(tokens: Token[], currentSearchIndex: number): { lastSearchIndex: number, value: CompilerInterface } {
-		const endTokenIndex = tokens.findIndex((token) => token.type === 'delimiter' && token.value === ';');
+		const tokensAtCurrentIndex = tokens.slice(currentSearchIndex);
+		const endTokenIndex = tokensAtCurrentIndex.findIndex((token) => token.type === 'delimiter' && token.value === ';');
 		if (endTokenIndex === -1) throw new SyntaxError(`Missing semicolon at the end of line:${tokens[currentSearchIndex].line}`);
 
-		const tokensToEvaluate = tokens.slice(currentSearchIndex, endTokenIndex);
+		const tokensToEvaluate = tokensAtCurrentIndex.slice(0, endTokenIndex);
 		const name = tokensToEvaluate[0];
-		if (name.type !== 'identifier') throw new SyntaxError(`VariableDefinition name is not an valid identifier:${name.line}:${name.column}`);
+
+		// eslint-disable-next-line curly -- Line gets too long
+		if (name.type !== 'identifier') {
+			throw new SyntaxError(`VariableDefinition name "${name.value}" is not an valid identifier:${name.line}:${name.column}`);
+		}
 
 		const typeAssignment = tokensToEvaluate[1];
 		// eslint-disable-next-line curly -- Line gets too long
