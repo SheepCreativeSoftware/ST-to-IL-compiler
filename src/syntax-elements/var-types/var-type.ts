@@ -1,18 +1,17 @@
 const VARIABLE_TYPE = [
 	'BOOL',
 	'DWORD',
-	'FLOAT',
+	'FREAL',
 	'WORD',
 	'INT',
 	'DINT',
 	'REAL',
-	'LREAL',
 ] as const;
 
 type VariableType = typeof VARIABLE_TYPE[number];
 
 class VarType {
-	public readonly SUPPORTED_ST_VALUES: string[] = [];
+	public readonly SUPPORTED_ST_VALUES: string[] | number[] = [];
 	public readonly SUPPORTED_VALUE_REGEX: RegExp | null = null;
 	constructor(
 		public readonly column: number,
