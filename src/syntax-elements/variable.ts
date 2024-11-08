@@ -66,9 +66,9 @@ class VariableDefinition extends BaseElement implements CompilerInterface {
 		this.type.checkSemantic();
 	}
 	compile(): string {
-		if (this.type.getCompiledValue() === null) return `${this.name} EQU ${this.type.getCompiledType()};`;
+		if (this.type.getCompiledValue() === null) return `${this.name} EQU ${this.type.getCompiledType()}`;
 
-		return `${this.name} EQU ${this.type.getCompiledType()} := ${this.type.getCompiledValue()};`;
+		return `${this.name} EQU ${this.type.getCompiledType()} := ${this.type.getCompiledValue()}`;
 	}
 }
 
