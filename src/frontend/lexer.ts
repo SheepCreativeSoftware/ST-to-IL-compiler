@@ -1,16 +1,7 @@
+import { BaseToken } from './base-token.js';
+import type { FinalToken } from './base-token.js';
 import { frontendLanguageFeatures } from './language-features.js';
-import type { BaseType, LexicalDefinition } from './language-features.js';
-
-interface Token {
-	baseType: BaseType
-	tokenType: string
-	value: string;
-	line: number;
-	column: {
-		end: number
-		start: number
-	};
-}
+import type { LexicalDefinition } from './language-features.js';
 
 type State = {
 	column: number;
@@ -18,56 +9,21 @@ type State = {
 	currentLexem(): string;
 	line: number;
 	next: string;
-	currentToken: Token | null
+	currentInstance: BaseToken | null
 };
 
-const isLetter = /^[a-zA-Z]$/;
-const isAlphanumeric = /^[a-zA-z][a-zA-z0-9_]*$/;
-// Is number or number which includes decimal point or number with exponent
-const isNumeric = /^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$/;
-// Fin hexadecimal numbers that are prefixed with 16# and can include underscore
-const isHexadecimal = /^16#[0-9A-Fa-f_]+$/;
-
-const isSpecialCharAscii = /^[^\w\s]|_$/;
-const isWhitespace = /^\s$/;
-
-const finalizeToken = (token: Token): Token => {
-	return token;
-};
-
-const createNewToken = (state: State): Token => {
-	let baseType: BaseType = 'Ignorable';
-	if (isNumeric.test(state.current)) {
-		baseType = 'Number';
-	} else if (isLetter.test(state.current)) {
-		baseType = 'Identifier';
-	} else if (isSpecialCharAscii.test(state.current)) {
-		baseType = 'Symbole';
-	}
-
-	return {
-		baseType,
-		column: {
-			end: state.column,
-			start: state.column,
-		},
-		line: state.line,
-		tokenType: '',
-		value: state.current,
-	};
-};
-
-const lexicalAnalyser = (input: string, startLine: number = 1): Token[] => {
-	const tokens: Token[] = [];
+// eslint-disable-next-line complexity -- It is not getting better
+const lexicalAnalyser = (input: string, startLine: number = 1): FinalToken[] => {
+	const tokens: FinalToken[] = [];
 	const { lexical } = frontendLanguageFeatures;
 
 	const state: State = {
 		column: 0,
 		current: '',
+		currentInstance: null,
 		currentLexem() {
 			return this.current+this.next;
 		},
-		currentToken: null,
 		line: startLine,
 		next: '',
 	};
@@ -76,9 +32,9 @@ const lexicalAnalyser = (input: string, startLine: number = 1): Token[] => {
 	for (let index = 0; index < input.length; index++) {
 		state.current = input[index];
 		state.next = input[index + 1];
+		state.column++;
 
 		if (state.current === '' || state.current === ' ' || state.current === '\t') {
-			state.column++;
 			continue;
 		}
 
@@ -115,33 +71,41 @@ const lexicalAnalyser = (input: string, startLine: number = 1): Token[] => {
 			continue;
 		}
 
-		if (state.currentToken) {
-			const currentVal = state.currentToken.value + state.current;
-			if (state.currentToken.baseType === 'Identifier' && isAlphanumeric.test(currentVal)) {
-				state.currentToken.value += state.current;
-			} else if (state.currentToken.baseType === 'Number' && (isNumeric.test(currentVal) || isHexadecimal.test(currentVal) || [
-				'.', 'e', 'E', '+', '-', '#',
-			].includes(state.current))) {
-				state.currentToken.value += state.current;
-			} else if (state.currentToken.baseType === 'Symbole' && isSpecialCharAscii.test(state.current) ) {
-				state.currentToken.value += state.current;
-			} else {
-				state.currentToken.column.end++;
-				tokens.push(finalizeToken(state.currentToken));
-				state.currentToken = createNewToken(state);
-			}
-		} else {
-			state.currentToken = createNewToken(state);
-		}
+		const newTokens = BaseToken.checkFollowingChars(state);
+		if (newTokens.length) tokens.push(...newTokens);
+		/*
+		 * If (state.currentToken) {
+		 * 	const currentVal = state.currentToken.value + state.current;
+		 * 	if (state.currentToken.baseType === 'Identifier' && isAlphanumeric.test(currentVal)) {
+		 * 		state.currentToken.value += state.current;
+		 * 	} else if (state.currentToken.baseType === 'Number' && (isNumeric.test(currentVal) || isHexadecimal.test(currentVal) || [
+		 * 		'.', 'e', 'E', '+', '-', '#',
+		 * 	].includes(state.current))) {
+		 * 		state.currentToken.value += state.current;
+		 * 	} else if (state.currentToken.baseType === 'Symbole' && isSpecialCharAscii.test(state.current) ) {
+		 * 		state.currentToken.value += state.current;
+		 * 	} else {
+		 * 		// New token without whitespace in between
+		 * 		state.currentToken.column.end = state.column - 1;
+		 * 		tokens.push(finalizeToken(state.currentToken));
+		 * 		state.currentToken = createNewToken(state);
+		 * 	}
+		 * } else {
+		 * 	state.currentToken = createNewToken(state);
+		 * }
+		 */
 
-		if (isWhitespace.test(state.next)) {
-			state.currentToken.column.end++;
-			tokens.push(finalizeToken(state.currentToken));
-			state.currentToken = null;
-		}
+		/*
+		 * If (isWhitespace.test(state.next)) {
+		 * 	state.currentToken.column.end = state.column;
+		 * 	tokens.push(finalizeToken(state.currentToken));
+		 * 	state.currentToken = null;
+		 * }
+		 */
 	}
 
 	return tokens;
 };
 
 export { lexicalAnalyser };
+export type { State };

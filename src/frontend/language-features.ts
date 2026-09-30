@@ -1,6 +1,6 @@
+import type { BaseType } from './base-token.js';
 import { buntstift } from 'buntstift';
 
-type BaseType = 'Number' | 'Identifier' | 'Symbole' | 'Ignorable';
 type LexicalDefinition = {
 	baseType: BaseType
 	lexem: string
