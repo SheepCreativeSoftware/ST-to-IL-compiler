@@ -30,7 +30,7 @@ class TypeDWORD extends VarType implements TypeInterface {
 
 	checkSemantic(): void | never {
 		const value = this.getValue();
-		// eslint-disable-next-line curly -- It gets too long
+
 		if (value && !this.SUPPORTED_VALUE_REGEX.test(value)) {
 			throw new TypeError(`Invalid value "${value}" for DWORD type:${this.line}:${this.column}`);
 		}

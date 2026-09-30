@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import {
-	compileFile, getAppVersion, getHelp, verifyFile,
+	compileFile, getAppVersion, getHelp, verifyFile, verifyFile2,
 } from '../dist/app.js';
 import { buntstift } from 'buntstift';
 import commandLineArgs from 'command-line-args';
@@ -22,6 +22,16 @@ const cli = async () => {
 		const verifyDefinitions = [{ alias: 'f', name: 'file', type: String }];
 		const verifyOptions = commandLineArgs(verifyDefinitions, { argv });
 		if (verifyOptions.file) return verifyFile({ filename: verifyOptions.file });
+
+		buntstift.error('No file specified.');
+		return buntstift.info('Use "st-to-il-compiler --help" for usage information');
+	}
+
+	if (mainOptions.command === 'verify2') {
+		/* Second - parse the command options */
+		const verifyDefinitions = [{ alias: 'f', name: 'file', type: String }];
+		const verifyOptions = commandLineArgs(verifyDefinitions, { argv });
+		if (verifyOptions.file) return verifyFile2({ filename: verifyOptions.file });
 
 		buntstift.error('No file specified.');
 		return buntstift.info('Use "st-to-il-compiler --help" for usage information');

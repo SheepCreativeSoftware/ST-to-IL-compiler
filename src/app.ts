@@ -1,6 +1,8 @@
+import './language-definition/index.js';
 import { type ParseTree, syntaxAnalyser } from './syntax-analysis/syntax-analyser.js';
 import { readFile, writeFile } from 'fs/promises';
 import { buntstift } from 'buntstift';
+import { frontendParser } from './frontend/frontend.js';
 import { lexicalAnalyser } from './lexical-analysis/lexical-analyser.js';
 import { semanticAnalyser } from './semantic-analysis/semantic-analyser.js';
 import { sourceCompiler } from './compile-source/source-compiler.js';
@@ -38,10 +40,23 @@ const verifySource = ({ source }: { source: string }): ParseTree => {
 	return parseTree;
 };
 
+const verifySource2 = ({ source }: { source: string }) => {
+	buntstift.info('Verifying code');
+
+	frontendParser({ source });
+	buntstift.success('Source verified');
+};
+
 const verifyFile = async ({ filename }: { filename: string }): Promise<void> => {
 	buntstift.info('Verifying code');
 	const fileContent = await readSourceFile({ filename });
 	verifySource({ source: fileContent });
+};
+
+const verifyFile2 = async ({ filename }: { filename: string }): Promise<void> => {
+	buntstift.info('Verifying code');
+	const fileContent = await readSourceFile({ filename });
+	verifySource2({ source: fileContent });
 };
 
 const compileFile = async ({ filename }: { filename: string }): Promise<void> => {
@@ -58,4 +73,4 @@ const compileFile = async ({ filename }: { filename: string }): Promise<void> =>
 	buntstift.success('File compiled');
 };
 
-export { compileFile, verifyFile };
+export { compileFile, verifyFile, verifyFile2 };

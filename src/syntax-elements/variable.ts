@@ -26,13 +26,12 @@ class VariableDefinition extends BaseElement implements CompilerInterface {
 		const tokensToEvaluate = tokensAtCurrentIndex.slice(0, endTokenIndex);
 		const name = tokensToEvaluate[0];
 
-		// eslint-disable-next-line curly -- Line gets too long
 		if (name.type !== 'identifier') {
 			throw new SyntaxError(`VariableDefinition name "${name.value}" is not an valid identifier:${name.line}:${name.column}`);
 		}
 
 		const typeAssignment = tokensToEvaluate[1];
-		// eslint-disable-next-line curly -- Line gets too long
+
 		if (typeAssignment.type !== 'delimiter' || typeAssignment.value !== ':') {
 			throw new SyntaxError(`Missing colon in variable assignment:${typeAssignment.line}:${typeAssignment.column}`);
 		}
@@ -43,7 +42,7 @@ class VariableDefinition extends BaseElement implements CompilerInterface {
 		let lastSearchIndex = currentSearchIndex + 3;
 		if (tokensToEvaluate.length === 5) {
 			valueToken = tokensToEvaluate[4];
-			// eslint-disable-next-line curly -- Line gets too long
+
 			if (valueToken.type !== 'identifier' && valueToken.type !== 'number' && valueToken.type !== 'keyword') {
 				throw new SyntaxError(`Variable value "${valueToken.value}" is not valid:${valueToken.line}:${valueToken.column}`);
 			}

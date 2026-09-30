@@ -72,7 +72,7 @@ const lexicalAnalyser = (input: string): Token[] => {
 					const wordWithoutParenthesis = trimmedWord.substring(1);
 
 					const knownWordResult = checkForKnownWord(wordWithoutParenthesis, currentPosition.line, nextWordNumber);
-					// eslint-disable-next-line max-depth -- This is a complex function
+
 					if (knownWordResult) tokens.push(knownWordResult);
 					continue;
 				}
@@ -80,7 +80,7 @@ const lexicalAnalyser = (input: string): Token[] => {
 				if (DELIMITERS.includes(trimmedWord.at(LAST_WORD) ?? '')) {
 					const wordWithoutDelimiter = trimmedWord.substring(0, trimmedWord.length - 1);
 					const knownWordResult = checkForKnownWord(wordWithoutDelimiter, currentPosition.line, currentPosition.column);
-					// eslint-disable-next-line max-depth -- This is a complex function
+
 					if (knownWordResult) tokens.push(knownWordResult);
 					tokens.push({ ...currentPosition, column: nextWordNumber, type: 'delimiter', value: trimmedWord.at(LAST_WORD) ?? '' });
 					continue;

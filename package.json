@@ -28,6 +28,7 @@
 		"test:watch": "tsx --test --watch \"**/*.test.ts\"",
 		"test:coverage": "tsx --test --experimental-test-coverage \"**/*.test.ts\"",
 		"verify": "npm run build && npx st-to-il-compiler verify -f test.st",
+		"verify2": "npm run build && npx st-to-il-compiler verify2 -f test2.st",
 		"compile": "npm run build && npx st-to-il-compiler compile -f test.st",
 		"deps:check": "ncu --format group --cooldown '7d'",
 		"deps:update": "npm run deps:check -- --interactive",
