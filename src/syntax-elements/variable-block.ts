@@ -23,7 +23,6 @@ class VarBlock extends BaseElement implements CompilerInterface {
 		const line = tokens[currentSearchIndex].line;
 		const column = tokens[currentSearchIndex].column;
 
-		// eslint-disable-next-line curly -- Line gets too long
 		if (tokens[currentSearchIndex].value !== VarBlock.startKeyword) {
 			throw new SyntaxError(`Expected keyword ${VarBlock.startKeyword} but got ${tokens[currentSearchIndex].value}:${line}:${column}`);
 		}

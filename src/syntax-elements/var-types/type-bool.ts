@@ -25,7 +25,7 @@ class TypeBool extends VarType implements TypeInterface {
 	}
 	checkSemantic(): void | never {
 		const value = this.getValue();
-		// eslint-disable-next-line curly -- It gets too long
+
 		if (value && !this.SUPPORTED_ST_VALUES.includes(value)) {
 			throw new TypeError(`Invalid value "${value}" for BOOL type:${this.line}:${this.column}`);
 		}

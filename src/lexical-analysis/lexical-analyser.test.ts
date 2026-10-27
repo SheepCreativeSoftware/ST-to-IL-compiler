@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises -- This is a test */
 /* eslint-disable no-magic-numbers -- This is a test */
 import { describe, it } from 'node:test';
 import assert from 'node:assert';

@@ -34,12 +34,11 @@ class TypeDINT extends VarType implements TypeInterface {
 	checkSemantic(): void | never {
 		const value = this.getValue();
 		if (!value) return;
-		// eslint-disable-next-line curly -- It gets too long
+
 		if (!this.SUPPORTED_VALUE_REGEX.test(value)) {
 			throw new TypeError(`Invalid value "${value}" for DWORD type:${this.line}:${this.column}`);
 		}
 
-		// eslint-disable-next-line curly -- It gets too long
 		if (this.SUPPORTED_ST_VALUES[0] > parseInt(value) || this.SUPPORTED_ST_VALUES[1] < parseInt(value)) {
 			throw new TypeError(`Value "${value}" is out of range for DINT type:${this.line}:${this.column}`);
 		}

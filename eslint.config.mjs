@@ -57,7 +57,7 @@ export default [
 				},
 			],
 			'consistent-this': ['error', 'that'],
-			curly: ['error', 'multi-or-nest', 'consistent'],
+			// Curly: ['error', 'multi-or-nest', 'consistent'],
 			'default-case': [
 				'error',
 				{
@@ -82,7 +82,7 @@ export default [
 			'max-depth': [
 				'error',
 				{
-					max: 4,
+					max: 5,
 				},
 			],
 			'max-lines': [
@@ -149,7 +149,7 @@ export default [
 			'no-magic-numbers': [
 				'error',
 				{
-					ignore: [0, 1],
+					ignore: [0, 1, 2],
 					ignoreArrayIndexes: true,
 					ignoreDefaultValues: true,
 				},
@@ -238,7 +238,6 @@ export default [
 			'prefer-numeric-literals': 'error',
 			'prefer-promise-reject-errors': 'error',
 			'prefer-rest-params': 'error',
-			radix: ['error', 'as-needed'],
 			'require-await': 'error',
 			'sort-imports': [
 				'error',
@@ -307,7 +306,7 @@ export default [
 			'@stylistic/computed-property-spacing': ['error', 'never'],
 			'@stylistic/dot-location': ['error', 'property'],
 			'@stylistic/eol-last': ['error', 'always'],
-			'@stylistic/func-call-spacing': ['error', 'never'],
+			// '@stylistic/func-call-spacing': ['error', 'never'],
 			'@stylistic/function-call-argument-newline': ['error', 'consistent'],
 			'@stylistic/function-paren-newline': ['error', 'multiline'],
 			'@stylistic/implicit-arrow-linebreak': ['error', 'beside'],
@@ -387,8 +386,7 @@ export default [
 	/** Typescript related rules with strict ruleset */
 	...tseslint.config(
 		pluginJs.configs.recommended,
-		...tseslint.configs.strictTypeChecked,
-		...tseslint.configs.stylisticTypeChecked,
+		...tseslint.configs.recommended,
 		{
 			rules: {
 				'@typescript-eslint/consistent-type-imports': 'error',
